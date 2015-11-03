@@ -1,7 +1,7 @@
 
 import texttable as tt
 from math import sqrt
-from scipy import stats
+
 
 __author__ = 'javier'
 
@@ -21,7 +21,7 @@ def report(results):
 
 def reportBenchmark(tab, benchmark, measures):
 
-    trimmed = stats.trimboth(sorted(measures), 0.1)
+    trimmed = trim_ends(sorted(measures), 0.1)
     runs = len(trimmed)
     average = sum(trimmed) / runs
     stddev  = sqrt(sum([(measure - average)**2 for measure in trimmed]))
@@ -29,3 +29,11 @@ def reportBenchmark(tab, benchmark, measures):
     tab.add_row([benchmark.version, benchmark.value, average, "%2.2f %%" % stddev_relative, stddev, len(measures), len(measures) - runs])
 
     tab.set_cols_width([35, 10, 10, 10, 10, 10, 10])
+
+def trim_ends(sorted_list, proportion_to_cut):
+
+    size = len(sorted_list)
+    left = int(proportion_to_cut * size)
+    right = size - left
+
+    return sorted_list[left:right]
